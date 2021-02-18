@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title> RemControl </title>
+		<link rel="stylesheet" href="styles.css">
+		<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="text/babel">
+			class Header extends React.Component {
+				render() {
+					return (
+						<div id="header">
+							<div id="logo">
+								<h1> RemControl </h1>
+							</div>
+							<div id="login">
+								<form action="http://localhost:8080">
+									<input type="text" name="emailAddress" placeholder="Имя почты"></input>
+									<input type="text" name="emailPassword" placeholder="Пароль"></input>
+									<input type="submit" placeholder="Войти"></input>
+								</form>
+							</div>
+						</div>
+					);
+				}
+			}
+			ReactDOM.render(
+				<Header />,
+				document.getElementById("root")
+			);
+		</script>
+	</body>
+</html>

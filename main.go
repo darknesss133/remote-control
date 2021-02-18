@@ -9,17 +9,12 @@ import (
 )
 
 var (
-	addr     = flag.String("addr", ":8080", "TCP address to listen to")
-	compress = flag.Bool("compress", false, "Whether to enable transparent response compression")
+	addr = flag.String("addr", ":8080", "TCP address to listen to")
 )
 
 func main() {
 	flag.Parse()
 	h := requestHandler
-	if *compress {
-		h = fasthttp.CompressHandler(h)
-	}
-
 	if err := fasthttp.ListenAndServe(*addr, h); err != nil {
 		log.Fatalf("Error in ListenAndServe: %s", err)
 	}
