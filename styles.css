@@ -13,6 +13,7 @@
 	#login {
     flex-direction: column;
 		align-items: center;
+		justify-content: center;
 	}
 	form {
     flex-direction: column;
