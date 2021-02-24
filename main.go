@@ -23,17 +23,17 @@ type user struct {
 
 //структура для хранения данных о токене пользователя
 type token struct {
-	access_token      string
-	token_type        string
-	expires_in        float64
-	id_token          string
-	error_description string
+	access_token string
+	token_type   string
+	expires_in   float64
+	id_token     string
 }
 
 var (
+	m            map[string]interface{}
 	userToken    token
 	userInfo     user
-	a            []byte
+	gResp        []byte
 	queryArgs    *fasthttp.Args
 	authCode     string
 	addr         = flag.String("addr", ":8080", "TCP address to listen to")
@@ -57,21 +57,23 @@ func main() {
 func requestHandler(ctx *fasthttp.RequestCtx) {
 	queryArgs = ctx.QueryArgs()
 	authCode = string(queryArgs.Peek("code"))
-	queryArgs.Reset()
-	queryArgs.Add("client_id", clientId)
-	queryArgs.Add("client_secret", clientSecret)
-	queryArgs.Add("redirect_uri", "http://localhost"+*addr)
-	queryArgs.Add("grant_type", grantType)
-	queryArgs.Add("code", authCode)
-	_, a, _ = fasthttp.Post(a, tokenUrl, queryArgs)
-	var f interface{}
-	json.Unmarshal(a, &f)
-	m := f.(map[string]interface{})
-	_, a, _ = fasthttp.Get(a, accessUrl+"?access_token="+m["access_token"].(string))
-	json.Unmarshal(a, &f)
-	n := f.(map[string]interface{})
-	fmt.Fprintf(ctx, "Hello %s!\n\n", n["name"])
-	for key, value := range n {
-		fmt.Fprintf(ctx, "%q : %q\n", key, value)
+	if authCode != "" {
+		queryArgs.Reset()
+		queryArgs.Add("client_id", clientId)
+		queryArgs.Add("client_secret", clientSecret)
+		queryArgs.Add("redirect_uri", "http://localhost"+*addr)
+		queryArgs.Add("grant_type", grantType)
+		queryArgs.Add("code", authCode)
+		_, gResp, _ = fasthttp.Post(gResp, tokenUrl, queryArgs)
+		queryArgs.Reset()
+		var f interface{}
+		json.Unmarshal(gResp, &f)
+		m = f.(map[string]interface{})
+		userToken.access_token = m["access_token"].(string)
+		_, gResp, _ = fasthttp.Get(gResp, accessUrl+"?access_token="+userToken.access_token)
+		json.Unmarshal(gResp, &f)
+		m := f.(map[string]interface{})
+		userInfo.name = m["name"].(string)
+		fmt.Fprintf(ctx, "Hello %s!", userInfo.name)
 	}
 }
