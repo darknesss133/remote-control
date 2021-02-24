@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RemControl</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
+    <!-- Bootstrap core CSS -->
+		<link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+		<!-- Custom styles for this template -->
+		<link href="https://getbootstrap.com/docs/5.0/examples/starter-template/starter-template.css" rel="stylesheet">
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+		<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+	<body>
+		<div id="root"></div>
+		<div id="root2"></div>
+		<script type="text/babel">
+			function LogOutButton () {
+				return (<a href="/logout"><button className="btn btn-outline-success">Выход</button></a>)
+			}
+
+			function LogInButton () {
+				return (<a href="https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8080/oauth&response_type=code&client_id=581640295716-h3aqeb6receolg99bq82jmtumcsq1l85.apps.googleusercontent.com&scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"><button className="btn btn-outline-success">Авторизация</button></a>)
+			}
+
+			class Header extends React.Component {
+				constructor(props)
+				{
+					super(props);
+				}
+				render() {
+					const isLogged = this.props.isLogged;
+					let auth;
+					if (isLogged=="false") {
+						auth = <LogInButton />
+					} else {
+						auth = <LogOutButton />
+					}
+					return(
+						<nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+							<div className="container-fluid">
+								<a className="navbar-brand" href="#">RemControl</a>
+								<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+									<span className="navbar-toggler-icon"></span>
+								</button>
+								<div className="collapse navbar-collapse" id="navbarsExampleDefault">
+									<ul className="navbar-nav me-auto mb-2 mb-md-0">
+										<li className="nav-item">
+											<a className="nav-link active" aria-current="page" href="#">Home</a>
+										</li>
+										<li className="nav-item">
+											<a className="nav-link" href="#">Link</a>
+										</li>
+										<li className="nav-item">
+											<a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</a>
+										</li>
+										<li className="nav-item dropdown">
+											<a className="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+											<ul className="dropdown-menu" aria-labelledby="dropdown01">
+												<li><a className="dropdown-item" href="#">Action</a></li>
+												<li><a className="dropdown-item" href="#">Another action</a></li>
+												<li><a className="dropdown-item" href="#">Something else here</a></li>
+											</ul>
+										</li>
+									</ul>
+									{auth}
+								</div>
+							</div>
+						</nav>
+					)
+				}
+			}
+
+			function LoggedOut() {
+				return (<h1>Пожалуйста авторизуйтесь</h1>);
+			}
+
+			function LoggedIn(props) {
+				return (<h1>Привет {props.name}</h1>);
+			}
+
+			class Welcome extends React.Component {
+				constructor(props)
+				{
+					super(props);
+				}
+				render () {
+					const isLogged = this.props.isLogged;
+					const name = this.props.name;
+					let welcomer;
+					if(isLogged=="true"){
+						welcomer = <LoggedIn name={name} />;
+					} else {
+						welcomer = <LoggedOut />;
+					}
+					return(
+						<main className="container">
+							<div className="starter-template text-center py-5 px-3">
+								{welcomer}
+							</div>
+						</main>
+					);
+				}
+			}
+			ReactDOM.hydrate(
+				<Header isLogged="{{.IsLogged}}" />,
+				document.getElementById("root")
+			);
+			ReactDOM.hydrate(
+				<Welcome name="{{.Name}}" isLogged="{{.IsLogged}}" />,
+				document.getElementById("root2")
+			)
+		</script>
+		<script src="https://getbootstrap.com/docs/5.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+	</body>
+</html>
